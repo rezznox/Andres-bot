@@ -1,0 +1,10 @@
+{
+  "name": "Andres-bot",
+  "version": "0.0.1",
+  "description": "Bot to annoy my cousin and I can get some practice in deployment",
+  "main": "index.js",
+  "repository": "git@github.com:rezznox/Andres-bot.git",
+  "author": "Armando <armando.saenz@gmail.com>",
+  "license": "None",
+  "private": true
+}
