@@ -31,7 +31,6 @@ const redditAuth = async () => {
     `${reddit_client}:${reddit_secret}`,
     'ascii'
   ).toString('base64');
-  console.log(base64Token);
 
   const response = await fetchJson(access_token_url, {
     method: "POST",
@@ -45,7 +44,6 @@ const redditAuth = async () => {
       'Content-Type': 'application/json'
     },
   });
-  console.log(response);
   return new RedditApi(response.access_token);
 };
 
