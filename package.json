@@ -1,10 +1,17 @@
 {
-  "name": "Andres-bot",
+  "name": "andres-bot",
   "version": "0.0.1",
   "description": "Bot to annoy my cousin and I can get some practice in deployment",
   "main": "index.js",
+  "type": "module",
   "repository": "git@github.com:rezznox/Andres-bot.git",
   "author": "Armando <armando.saenz@gmail.com>",
   "license": "None",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "firebase-tools": "^12.5.2",
+    "global": "^4.4.0",
+    "puppeteer": "^21.1.1"
+  }
 }
