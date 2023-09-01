@@ -9,6 +9,7 @@
   "license": "None",
   "private": true,
   "dependencies": {
+    "axios": "^1.5.0",
     "dotenv": "^16.3.1",
     "firebase-tools": "^12.5.2",
     "global": "^4.4.0",

@@ -1,11 +1,8 @@
 import { config } from "dotenv";
+import axios from "axios";
 
 config();
 let redditApi;
-
-const fetchJson = async (url, options) => {
-  return await (await fetch(url, options)).json();
-};
 
 const {
   subreddit,
@@ -19,37 +16,53 @@ const {
 function RedditApi(access_token) {
   this.access_token = access_token;
 
-  this.retrieve = async () => {
-    const collection = fetch(
+  this.retrieve = () => {
+    return axios(
       `/api/v1/collections/subreddit_collections?sr_fullname=${subreddit}`
     );
   };
 }
 
 const redditAuth = async () => {
-  const base64Token = Buffer.from(
-    `${reddit_client}:${reddit_secret}`,
-    'ascii'
-  ).toString('base64');
 
-  const response = await fetchJson(access_token_url, {
-    method: "POST",
-    body: {
-      grant_type: 'password',
-      username: reddit_username,
-      password: reddit_password,
-    },
-    headers: {
-      Authorization: `Basic ${base64Token}`,
-      'Content-Type': 'application/json'
-    },
-  });
+  const params = new URLSearchParams();
+  params.append('grant_type', 'password');
+  params.append('username', reddit_username);
+  params.append('password', reddit_password);
+
+  const response = await axios.post(
+    access_token_url,
+    params,
+    {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Script-Andres-bot/0.0.1 by rezznoxx",
+      },
+      auth: {
+        username: reddit_client,
+        password: reddit_secret,
+      },
+    }
+  );
+
   return new RedditApi(response.access_token);
 };
 
 /* retrieve(); */
+const run = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      redditApi = await redditAuth();
+      resolve(redditApi);
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 
-redditApi = redditAuth();
-console.log(redditApi);
+run().then(async () => {
+  const r = await redditApi.retrieve();
+  console.log(r);
+});
 
 export { redditApi };
