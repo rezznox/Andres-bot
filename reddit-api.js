@@ -16,8 +16,8 @@ const {
 function RedditApi(access_token) {
   this.access_token = access_token;
 
-  this.retrieve = async () => {
-    const collection = fetch(
+  this.retrieve = () => {
+    return axios(
       `/api/v1/collections/subreddit_collections?sr_fullname=${subreddit}`
     );
   };
@@ -60,6 +60,9 @@ const run = () => {
   });
 };
 
-run().then();
+run().then(async () => {
+  const r = await redditApi.retrieve();
+  console.log(r);
+});
 
 export { redditApi };
