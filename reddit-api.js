@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import axios from "axios";
+import { writeThyFile } from "./writeFIle.js";
 
 config();
 let redditApi;
@@ -11,14 +12,23 @@ const {
   reddit_password,
   reddit_client,
   reddit_secret,
+  reddit_api_url
 } = process.env;
 
 function RedditApi(access_token) {
   this.access_token = access_token;
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${this.access_token}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": "Script-Andres-bot/0.0.1 by rezznoxx",
+    },
+  };
 
-  this.retrieve = () => {
+  this.retrieveSubredditRandom = () => {
     return axios(
-      `/api/v1/collections/subreddit_collections?sr_fullname=${subreddit}`
+      `${reddit_api_url}r/${subreddit}/random`,
+      config
     );
   };
 }
@@ -45,7 +55,7 @@ const redditAuth = async () => {
     }
   );
 
-  return new RedditApi(response.access_token);
+  return new RedditApi(response.data.access_token);
 };
 
 /* retrieve(); */
@@ -53,16 +63,17 @@ const run = () => {
   return new Promise(async (resolve, reject) => {
     try {
       redditApi = await redditAuth();
+      const collections = await redditApi.retrieveSubredditRandom();
+      writeThyFile(collections);
+      
       resolve(redditApi);
     } catch (e) {
+      console.log('//////ERROR//////')
       reject(e);
     }
   });
 };
 
-run().then(async () => {
-  const r = await redditApi.retrieve();
-  console.log(r);
-});
+run().then();
 
 export { redditApi };
