@@ -1,6 +1,5 @@
 import { config } from "dotenv";
 import axios from "axios";
-import { writeThyFile } from "./writeFIle.js";
 
 config();
 let redditApi;
@@ -25,9 +24,16 @@ function RedditApi(access_token) {
     },
   };
 
-  this.retrieveSubredditRandom = () => {
+  this.retrieveSubredditHot = () => {
     return axios(
-      `${reddit_api_url}r/${subreddit}/random`,
+      `${reddit_api_url}r/${subreddit}/hot?limit=2`,
+      config
+    );
+  };
+
+  this.retrieveMe = () => {
+    return axios(
+      `${reddit_api_url}/api/v1/me`,
       config
     );
   };
@@ -63,8 +69,8 @@ const run = () => {
   return new Promise(async (resolve, reject) => {
     try {
       redditApi = await redditAuth();
-      const collections = await redditApi.retrieveSubredditRandom();
-      writeThyFile(collections);
+      const subredditRandom = await redditApi.retrieveSubredditHot();
+      
       
       resolve(redditApi);
     } catch (e) {
