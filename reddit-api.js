@@ -1,9 +1,6 @@
-import { config } from "dotenv";
 import axios from "axios";
-
+import { config } from "dotenv";
 config();
-let redditApi;
-
 const {
   subreddit,
   access_token_url,
@@ -64,13 +61,10 @@ const redditAuth = async () => {
   return new RedditApi(response.data.access_token);
 };
 
-/* retrieve(); */
-const run = () => {
+export const run = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      redditApi = await redditAuth();
-      const subredditRandom = await redditApi.retrieveSubredditHot();
-      
+      const redditApi = await redditAuth();
       
       resolve(redditApi);
     } catch (e) {
@@ -80,6 +74,3 @@ const run = () => {
   });
 };
 
-run().then();
-
-export { redditApi };
