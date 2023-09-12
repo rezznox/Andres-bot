@@ -17,6 +17,19 @@ const getUrlFromReddit = async (redditApi) => {
   return children[1].data.url;
 };
 
+const focusElement = async (page, selector) => {
+  const listElement = await page.waitForSelector(selector);
+  await listElement.click();
+}
+
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+const focusAndType = async(page, selector, type) => {
+  focusElement(page, selector);
+  await page.keyboard.type(type);
+  await page.keyboard.press('Enter');
+}
+
 /* exports.resetCreditsForFreeUsers = functions.pubsub
   .schedule("0 12 * * *")
   .onRun(async (context) => {
@@ -25,20 +38,19 @@ const getUrlFromReddit = async (redditApi) => {
 (async () => {
   const browser = await puppeteer.launch({
     userDataDir: "./user_data",
-    headless: true,
+    headless: false,
   });
   const page = await browser.newPage();
   await page.setUserAgent(ua);
   await page.goto("https://web.whatsapp.com");
-  const listElement = await page.waitForSelector(`span[title="${target}"]`);
-  await listElement.click();
-  const inputElement = await page.waitForSelector("._3Uu1_");
-  await inputElement.click();
-  
+  await focusAndType(page, `._2vDPL`, target);
+  await delay(2000);
+  await focusElement(page, `span[title="${target}"]`);
+
   const redditApi = await run();
   const url = await getUrlFromReddit(redditApi);
-  await page.keyboard.type(`${message}: ${url}`);
-  await page.keyboard.press("Enter");
+  
+  await focusAndType(page, "._3Uu1_", `${message}: ${url}`)
   setTimeout(async () => {
     await browser.close();
   }, 2000);
